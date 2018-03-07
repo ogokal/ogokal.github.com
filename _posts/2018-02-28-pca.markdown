@@ -1,0 +1,113 @@
+---
+layout: post
+title:  "Notes about PCA"
+date:   2018-02-28 18:02:35 +0300
+categories: ml
+---
+>Underlined item like $$\underline{U_1}$$ means vector, uppercase letter like $$X$$ means matrix, lowercase like $$x$$ means scalar variable.
+
+The notes here is a summary of what I have learned in some lectures online and the related articles.
+Let's begin with the problem, we have a matrix
+\begin{equation} 
+X = \begin{bmatrix} \underline{x_1} & \underline{x_2} &\dots & \underline{x_n}
+\end{bmatrix}_{dxn}
+\end{equation}
+
+where $$\underline{x_i}\epsilon\Re^d$$
+
+![data with noise]({{ "/images/data_with_noise.png" | absolute_url }})
+![data without noise]({{ "/images/data_without_noise.png" | absolute_url }})
+>Image on the left stands for a data with noise and its principle components are also indicated.
+On the rigth, you can see the data in a different coordinate system of $$U_1$$ and $$U_2$$.
+
+We would like to find some kind of new coordinate system based on $$U_1$$ , $$U_2$$ and aim to choose the direction with maximum variance to represent better the original data.
+So mathematically speaking we are going to solve this incomplete optimization problem.
+\begin{array}{ll}
+\underset{\underline{U_1}}{\text{maximize}}& \text{var} (\underline{U_1}^T\tilde{X})\\\
+\end{array}
+
+where  
+
+\begin{equation}
+\tilde{X} = X - \mu
+\end{equation}
+
+\begin{equation}
+\mu = \frac{1}{n}\sum_{i=0}^n \underline{x_i}
+\end{equation}
+
+$$\underline{U_1}\epsilon\Re^{1xd}$$ and $$X\epsilon\Re^{dxn}$$ so resulting reduced vector along the dimension of $$U_1$$ is $$\Re^{1xn}$$
+Let's think about the case where we want to multiply the value of mean and variance. If the multiplier is $$z$$ then mean will increase $$z$$ times, but for the variance the amount of increase will be $$z^2$$. Based on the behavior of variance with a multiplier, we can deduce that:
+
+\begin{equation}
+var(\underline{U_1}\tilde{X}) = \underline{U^T}S\underline{U_1}
+\end{equation}
+where $$S$$ is the covariance matrix of $$X$$ and the result of the operation expected to be scalar.
+What we have here is an optimisation problem for a quadratic function with an expected scalar result (you can verify that from the dimensions of components). To solve that optimisation problem we need more constraints since without further limitations we can just choose maximum values for $$\underline{U_1}$$.  An appropriate constraint could be $$\underline{U_1}^T \underline{U_1} = 1$$. With this addition to maximizatiion problem, finally we have well defined problem.
+\begin{array}{ll}
+\underset{\underline{U_1}}{\text{maximize}}& \text{var} (\underline{U_1}^T\tilde{X})\\\
+\text{subject to} & \underline{U^T} \underline{U_1} = 1\\\
+\end{array}
+
+The obvious method to solve such an optimization problem is to use Lagragian. Quick note about the optimization, we aim to maximize a function based on another function at some point where their derivative are aligned.
+
+![optimization]({{ "/images/optimization.png" | absolute_url }}){: .center-image }
+
+\begin{equation} 
+\mathfrak{L}(x,y,\lambda) = f(x,y) - \lambda g(x,y) \\\
+\nabla \mathfrak{L}(x,y,\lambda)  = 0 \\\
+\nabla f(x,y) = \lambda\nabla g(x,y) \\\
+\end{equation}
+
+so If we apply the same steps to our maximization problem.
+\begin{equation} 
+\frac {\partial \mathfrak{L}(x,y,\lambda)}{\underline{U_1}} = 2S\underline{U_1} - 2\lambda\underline{U_1} = 0
+\end{equation}
+
+> Quick note about the derivative of
+> $$\underline{U^T}S\underline{U_1}$$ since it is a scalar, derivative of a scalar with respect to a vector would be a vector with same dimensions so we expect a result in dimensions of $$ \Re^{dx1} $$
+
+\begin{equation}
+\require{cancel}
+2S\underline{U_1}  = 2\lambda\underline{U_1} \\\
+\cancel{2}S\underline{U_1}  = \cancel{2}\lambda\underline{U_1} \\\
+\end{equation}
+
+This linear equation should be familiar for everyone that have knowledge about eigen decomposition.  So that means, I we can find eigen vectors of covariance matrix, we will get the principle components. But what components are important for us ?
+If I replace $$ S\underline{U_1} $$ with  $$\lambda\underline{U_1} $$ then
+\begin{equation}
+var(\underline{U_1}X) = \underline{U^T}\lambda\underline{U_1}
+\end{equation}
+
+since $$\lambda$$ is a scalar I can move it to the head.
+\begin{equation}
+var(\underline{U_1}X) = \lambda\underline{U^T}\underline{U_1} \\\
+var(\underline{U_1}X) = \lambda \\\
+\end{equation}
+
+since $$\underline{U^T}\underline{U_1} = 1$$ then means to find the components with maximum variance, I need to sort eigen values in a descending order and their corresponding eigen vectors would give me the expected result.
+There is a another faster way to compute principle components. It is called singular value decomposition (SVD) , mathematically speaking:
+\begin{equation}
+\tilde{X} = U\Sigma V^T
+\end{equation}
+
+where $$U$$ is eigen vectors of $$\tilde{X}\tilde{X}^T$$ and 
+\begin{equation}
+\Sigma = \begin{bmatrix} \underline{x_1} & \dots & \dots & \dots \\\ 
+\dots & \underline{x_2} & \dots & \dots \\\ 
+\dots&\dots&\dots &\dots\\\
+\dots & \dots &  \dots &\underline{x_n}\\\
+\end{bmatrix}_{dxn}
+\end{equation} is a eigen values of either $$\tilde{X}\tilde{X}^T$$ or $$\tilde{X}^T\tilde{X}$$
+
+After we finally got $$U$$ matrix, we can calculate lower dimension representation with:
+\begin{equation}
+Y = U^TX
+\end{equation}
+and if we reverse the process to get back the original data 
+$$
+\tilde{X}
+$$
+\begin{equation}
+\tilde{X} = UY
+\end{equation}
