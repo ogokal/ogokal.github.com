@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-Noting for now.
+Nothing for now.
