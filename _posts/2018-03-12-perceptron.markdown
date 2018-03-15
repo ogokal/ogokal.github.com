@@ -60,3 +60,34 @@ and assume that both $$x_1$$ $$x_2$$ are on the same line so satisfying the foll
 \end{align}
 since the dot product of items in the last equation is 0, that means they are orthogonal, $$\underline{\beta} \perp \underline{x_1} - \underline{x_2} $$
 >Buraya diklik icin sekil koy
+
+>Buraya 2. sekli koy
+For another point $$X_0$$ on the same line, the line equation should be valid.
+\begin{equation}
+\beta_TX_0 + \beta_0 = 0 \\\
+\beta_0 = -\beta_TX_0
+\end{equation}
+ >Buraya 3. sekli koy
+
+ So how do we calculate distance from a point not on the line or the line. We
+ know that $$\beta$$ is perpendicular to the line so if we first project distance
+ vector on to the $$\beta$$ we are done.
+ The distance vector between the new point $$\underline{x}$$ and $$\underline{x_0}$$
+ is $$ \underline{x} - \underline{x_0} $$ and if we project it on the $$\beta$$
+ the result would be:
+ \begin{equation}
+ distance = \frac{\beta_TX}{\|\beta\|} -  \frac{\beta_TX}{\|\beta_0\|} \\\
+ distance = \frac{\beta_TX}{\|\beta\|} -  \beta_0 \text{from the equality}(\beta_0 = -\beta_TX_0)\\\
+ \end{equation}
+
+ If the point is on the upper side of this discriminative line then the distance will
+ be positive otherwise it is negative.
+ How can we turn this distance function to a score function so that we can take
+ derivative of it ? It should support both cases (positive and negative) ?
+ Let's assume we choose absolute of distance as our scoring function, in that cases
+ we can't differentiate both cases. What if we multiply result with itself again, I mean
+\begin{equation}
+d_i = y_i (\beta_TX + \beta_0)
+\end{equation}
+then we will have scoring function for valid cases (actual value and predicted value are aligned)
+> sayfa 7
