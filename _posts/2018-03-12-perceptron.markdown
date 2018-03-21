@@ -90,4 +90,11 @@ For another point $$X_0$$ on the same line, the line equation should be valid.
 d_i = y_i (\beta_TX + \beta_0)
 \end{equation}
 then we will have scoring function for valid cases (actual value and predicted value are aligned)
-> sayfa 7
+The total scoring function will be:
+\begin{equation}
+\Phi(\beta,\beta_0) = \sum_{i\epsilon M} -y_i (\beta x_i + \beta_0)
+\end{equation}
+where $$M$$ is the set of points that have been misclassified.
+Now we have equation we are going to use the to learn our model parameters $$\beta$$ and $$\beta_0$$ with gradient descent algorithm.
+
+\beta_\text{new} = \beta_\text{old} -
